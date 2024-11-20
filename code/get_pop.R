@@ -178,7 +178,6 @@ regions <- map_df(regions, function(x)
 population <- left_join(population, regions, by = 'state_name')
 
 
-
-return(population)
+# when doing source(), load in population object
 
 
