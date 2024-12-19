@@ -94,7 +94,7 @@ dat |>
                values_to = 'values') |> 
   mutate(rate = (values / population) * 100000,
          region = as.factor(region)) |>
-  filter(date >= make_date(2021, 7, 1) & date <= make_date(2021, 11, 31)) |>
+  filter(date >= make_date(2021, 7, 1) & date <= make_date(2021, 11, 30)) |>
   ggplot(aes(x = date, y = rate, color = state)) + 
   geom_line(aes(group = state)) + # creates smooth lines
   facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
