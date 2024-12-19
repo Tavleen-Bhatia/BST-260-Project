@@ -25,7 +25,7 @@ library(tibble)
 # reading in csv
 # if running code in code directory, make sure to add ..
 # if running in home directory, just start with data/
-population <- read.csv('../raw-data/NST-EST2023-ALLDATA.csv')
+population <- read.csv('raw-data/NST-EST2023-ALLDATA.csv')
 
 # data wrangling population dataframe
 population <- population |>
