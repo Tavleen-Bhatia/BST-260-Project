@@ -1,2 +1,6 @@
 # BST-260-Project
-Repository of R code for BST-260 project 
+
+Steps on how to reproduce project:
+
+1)
+
