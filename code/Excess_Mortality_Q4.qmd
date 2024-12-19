@@ -1,0 +1,85 @@
+---
+title: "Excess_Mortality_Q4.qmd"
+format: html
+editor: visual
+---
+
+## Question 4: **For those working in groups**: Estimate excess mortality for each week for each state. Do COVID-19 deaths explain the excess mortality? - pick a good region/state to show this holds
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(ggrepel)
+```
+
+```{r}
+dat <- readRDS('../data/dat.rds')
+pre_covid <- readRDS('../data/pre-covid.rds')
+#write.csv(pre_covid, "pre_covid.csv", row.names = FALSE)
+```
+
+#use the pre-covid data to train and test on dat
+
+```{r}
+head(pre_covid)
+unique(pre_covid$mmwr_year)
+
+View(dat)
+```
+
+pre_covid \|\>
+
+filter(mmwr_year \> 2022)
+
+```{r}
+fit <- pre_covid |> lm(total_deaths ~ as.factor(state) + as.factor(mmwr_week) + as.factor(region), data = _)
+summary(fit)
+```
+
+```{r}
+predicted_deaths <- predict(fit, newdata = dat, se.fit = TRUE)
+
+dat2 <- dat |>
+  mutate(
+    expected_deaths = predicted_deaths$fit, 
+    expected_deaths_se = predicted_deaths$se.fit, 
+    excess_deaths = total_deaths - expected_deaths, 
+  )
+
+View(dat2)
+
+```
+
+```{r}
+# Reshape data for plotting
+overlay_data <- dat2 |> 
+  filter(state %in% c("NJ")) |> 
+  #wave 1: April 2020 - June 2020
+  #filter(date >= make_date(2020, 9, 1) & date <= make_date(2021, 4, 1)) |> 
+  select(state, mmwr_year, mmwr_week, total_deaths, covid_deaths, excess_deaths) |>
+  pivot_longer(
+    cols = c(covid_deaths, excess_deaths),
+    names_to = "type",
+    values_to = "deaths"
+  )
+
+#can focus on comparing states in region 2 vs region 10, 
+library(ggplot2)
+ggplot(overlay_data, aes(x = mmwr_week, y = deaths, color = type, group = type)) +
+  geom_line() +
+  facet_wrap(~mmwr_year, scales = "free_y") +
+  labs(
+    title = "Total Deaths vs Excess Deaths by Week and State",
+    x = "MMWR Week",
+    y = "Number of Deaths",
+    color = "Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+```{r}
+overlay_data
+```

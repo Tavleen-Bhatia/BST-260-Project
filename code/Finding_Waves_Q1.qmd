@@ -1,0 +1,143 @@
+---
+title: "Q1 - Producing Waves"
+format: html
+editor: visual
+---
+
+## Question 1: Divide the pandemic period, January 2020 to December 2024 into *waves*. Justify your choice with data visualization.
+
+This documents makes various plots to visually see COVID-19 waves. We define a COVID-19 'wave' as a time period where there is a hump in COVID-19 cases and COVID-19 deaths around the same time period, which depicts when COVID-19 was infectious and deadly. If COVID-19 cases increases, we would expect COVID-19 deaths to increase. If COVID-19 cases decreases, we would expect COVID-19 deaths to decrease.
+
+```{r}
+# loading in data
+dat <- readRDS('../data/dat.rds')
+```
+
+```{r}
+# Export to CSV
+write.csv(dat, "dat.csv", row.names = FALSE)
+```
+
+Graphing COVID-19 waves by region for the whole period
+
+```{r}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Rates of COVID cases, hospitalizations, COVID deaths, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+Now we can zoom in on certain peaks in cases and covid_deaths to analyze what is happening during certain waves. There are 4 possible waves:
+
+-   Wave 1: April 2020 - June 2020
+
+-   Wave 2: October 2020 - March 2021
+
+-   Wave 3: August 2021 - November 2021
+
+-   Wave 4: January 2022 - March 2022
+
+Wave 1: April 2020 - June 2020
+
+```{r}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2020, 3, 15) & date <= make_date(2020, 6, 1)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 1 Rates of COVID cases/deaths, hospitalizations, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+Wave 2: October 2020 - March 2021
+
+```{r}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2020, 9, 1) & date <= make_date(2021, 4, 1)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 2 Rates of COVID cases/deaths, hospitalizations, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+Wave 3: August 2021 - November 2021
+
+```{r}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2021, 7, 1) & date <= make_date(2021, 12, 31)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 3 Rates of COVID cases/deaths, hospitalizations, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+Wave 4: January 2022 - March 2022
+
+```{r}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2021, 12, 1) & date <= make_date(2022, 3, 31)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 4 Rates of COVID cases/deaths, hospitalizations, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```

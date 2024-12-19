@@ -1,0 +1,163 @@
+---
+title: "Excess_Mortality_Rates_Q5"
+format: html
+editor: visual
+---
+
+## Question 5: Repeat 2 but for excess mortality instead of COVID-19 deaths, i.e., : For each period compute the excess mortality rates by state. Describe which states did better or worse during the different periods.
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(ggrepel)
+```
+
+```{r}
+dat <- readRDS('../data/dat.rds')
+pre_covid <- readRDS('../data/pre-covid.rds')
+```
+
+```{r}
+fit <- pre_covid |> lm(total_deaths ~ as.factor(state) + as.factor(mmwr_week) + as.factor(region), data = _)
+summary(fit)
+```
+
+```{r}
+predicted_deaths <- predict(fit, newdata = dat, se.fit = TRUE)
+
+dat2 <- dat |>
+  mutate(
+    expected_deaths = predicted_deaths$fit, 
+    expected_deaths_se = predicted_deaths$se.fit, 
+    excess_deaths = total_deaths - expected_deaths, 
+  )
+
+#View(dat2)
+
+
+sort(unique(dat2$region))
+```
+
+```{r}
+dat2 |>
+  select(date, population, 
+         covid_deaths, excess_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(excess_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+  #wave 1: April 2020 - June 2020
+  filter(date >= make_date(2020, 3, 15) & date <= make_date(2020, 6, 1)) |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = paste('Wave 1: Rates of Excess deaths, & total deaths in U.S. for Region'), 
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+```
+
+```{r}
+
+for (i in sort(unique(dat2$region_name))) {
+ plot <- dat2 |>
+  select(date, population, 
+         covid_deaths, excess_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(excess_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+  filter(region_name %in% i) |>
+  #wave 1: April 2020 - June 2020
+  filter(date >= make_date(2020, 3, 15) & date <= make_date(2020, 6, 1)) |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = paste('Wave 1: Rates of Excess deaths, & total deaths in U.S. for Region', i), 
+       color = 'State') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+ 
+ print(plot)
+}
+```
+
+```{r}
+dat2 |>
+  select(date, population, 
+         covid_deaths, excess_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(excess_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+  #Wave 2: October 2020 - March 2021
+  filter(date >= make_date(2020, 9, 1) & date <= make_date(2021, 4, 1)) |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 2: Rates of Excess deaths, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+```
+
+```{r}
+dat2 |>
+  select(date, population, 
+         covid_deaths, excess_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(excess_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+  #Wave 3: August 2021 - November 2021
+  filter(date >= make_date(2021, 8, 1) & date <= make_date(2021, 11, 31)) |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 3: Rates of Excess deaths, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+```
+
+```{r}
+dat2 |>
+  select(date, population, 
+         covid_deaths, excess_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(excess_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+  #Wave 4: January 2022 - March 2022
+  filter(date >= make_date(2021, 12, 1) & date <= make_date(2022, 3, 31)) |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 4: Rates of Excess deaths, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+
+
+```
