@@ -11,7 +11,7 @@ library(lubridate)
 library(tibble)
 
 # reading in csv
-population <- read.csv('../data/NST-EST2023-ALLDATA.csv')
+population <- read.csv('../raw-data/NST-EST2023-ALLDATA.csv')
 
 
 # data wrangling population dataframe

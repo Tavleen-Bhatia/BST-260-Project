@@ -10,7 +10,7 @@ library(tibble)
 
 
 source('functions.R')
-population_preCovid <- read.csv('../data/nst-est_preCovid.csv')
+population_preCovid <- read.csv('../raw-data/nst-est_preCovid.csv')
 
 deaths_preCovid_raw <- get_cdc_data('https://data.cdc.gov/resource/3yf8-kanr.json')
 
