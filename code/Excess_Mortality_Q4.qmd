@@ -15,7 +15,7 @@ library(ggrepel)
 
 ```{r}
 dat <- readRDS('../data/dat.rds')
-pre_covid <- readRDS('../data/pre-covid.rds')
+pre_covid <- readRDS('../data/dat_preCovid.rds')
 #write.csv(pre_covid, "pre_covid.csv", row.names = FALSE)
 ```
 
@@ -24,13 +24,7 @@ pre_covid <- readRDS('../data/pre-covid.rds')
 ```{r}
 head(pre_covid)
 unique(pre_covid$mmwr_year)
-
-View(dat)
 ```
-
-pre_covid \|\>
-
-filter(mmwr_year \> 2022)
 
 ```{r}
 fit <- pre_covid |> lm(total_deaths ~ as.factor(state) + as.factor(mmwr_week) + as.factor(region), data = _)
@@ -53,6 +47,10 @@ View(dat2)
 
 ```{r}
 # Reshape data for plotting
+
+#Can provide example from wave 1 to show alignment
+
+#For Wave 1- State doing poorly
 overlay_data <- dat2 |> 
   filter(state %in% c("NJ")) |> 
   #wave 1: April 2020 - June 2020
@@ -63,6 +61,9 @@ overlay_data <- dat2 |>
     names_to = "type",
     values_to = "deaths"
   )
+
+#For Wave 1- State doing well 
+
 
 #can focus on comparing states in region 2 vs region 10, 
 library(ggplot2)
