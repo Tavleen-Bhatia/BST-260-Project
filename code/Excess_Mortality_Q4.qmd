@@ -15,7 +15,7 @@ library(ggrepel)
 
 ```{r}
 dat <- readRDS('../data/dat.rds')
-pre_covid <- readRDS('../data/dat_preCovid.rds')
+pre_covid <- readRDS('../data/pre-covid.rds')
 #write.csv(pre_covid, "pre_covid.csv", row.names = FALSE)
 ```
 
@@ -24,6 +24,8 @@ pre_covid <- readRDS('../data/dat_preCovid.rds')
 ```{r}
 head(pre_covid)
 unique(pre_covid$mmwr_year)
+
+View(dat)
 ```
 
 ```{r}
@@ -50,11 +52,12 @@ View(dat2)
 
 #Can provide example from wave 1 to show alignment
 
-#For Wave 1- State doing poorly
-overlay_data <- dat2 |> 
+#For Wave 1- State doing poorly - NJ
+
+w1_worst <- dat2 |> 
   filter(state %in% c("NJ")) |> 
   #wave 1: April 2020 - June 2020
-  #filter(date >= make_date(2020, 9, 1) & date <= make_date(2021, 4, 1)) |> 
+  filter(date >= make_date(2020, 3, 15) & date <= make_date(2020, 6, 1)) |> 
   select(state, mmwr_year, mmwr_week, total_deaths, covid_deaths, excess_deaths) |>
   pivot_longer(
     cols = c(covid_deaths, excess_deaths),
@@ -62,16 +65,26 @@ overlay_data <- dat2 |>
     values_to = "deaths"
   )
 
-#For Wave 1- State doing well 
+#For Wave 1- State doing well - AK 
+
+w1_best <- dat2 |> 
+  filter(state %in% c("AK")) |> 
+  #wave 1: April 2020 - June 2020
+  filter(date >= make_date(2020, 3, 15) & date <= make_date(2020, 6, 1)) |> 
+  select(state, mmwr_year, mmwr_week, total_deaths, covid_deaths, excess_deaths) |>
+  pivot_longer(
+    cols = c(covid_deaths, excess_deaths),
+    names_to = "type",
+    values_to = "deaths"
+  )
 
 
-#can focus on comparing states in region 2 vs region 10, 
 library(ggplot2)
-ggplot(overlay_data, aes(x = mmwr_week, y = deaths, color = type, group = type)) +
+ggplot(w1_worst, aes(x = mmwr_week, y = deaths, color = type, group = type)) +
   geom_line() +
   facet_wrap(~mmwr_year, scales = "free_y") +
   labs(
-    title = "Total Deaths vs Excess Deaths by Week and State",
+    title = "COVID Deaths vs Excess Deaths for NJ ",
     x = "MMWR Week",
     y = "Number of Deaths",
     color = "Type"
@@ -79,8 +92,96 @@ ggplot(overlay_data, aes(x = mmwr_week, y = deaths, color = type, group = type))
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+
+ggplot(w1_best, aes(x = mmwr_week, y = deaths, color = type, group = type)) +
+  geom_line() +
+  facet_wrap(~mmwr_year, scales = "free_y") +
+  labs(
+    title = "COVID Deaths vs Excess Deaths for AK in Wave 1",
+    x = "MMWR Week",
+    y = "Number of Deaths",
+    color = "Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ```{r}
-overlay_data
+#For wave 2 - State doing poorly - South Dakota
+
+w2_worst <- dat2 |> 
+  filter(state %in% c("SD")) |> 
+  #wave 2: October 2020 - March 2021
+  filter(date >= make_date(2020, 9, 1) & date <= make_date(2021, 4, 1)) |> 
+  select(state, mmwr_year, mmwr_week, total_deaths, covid_deaths, excess_deaths) |>
+  pivot_longer(
+    cols = c(covid_deaths, excess_deaths),
+    names_to = "type",
+    values_to = "deaths"
+  )
+
+ggplot(w2_worst, aes(x = mmwr_week, y = deaths, color = type, group = type)) +
+  geom_line() +
+  facet_wrap(~mmwr_year, scales = "free_y") +
+  labs(
+    title = "COVID Deaths vs Excess Deaths for SD in Wave 2",
+    x = "MMWR Week",
+    y = "Number of Deaths",
+    color = "Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+#For wave 3 - State doing poorly - South Dakota
+
+w3_worst <- dat2 |> 
+  filter(state %in% c("FL")) |> 
+  #wave 3: August-November 2021
+  filter(date >= make_date(2021, 8, 1) & date <= make_date(2021, 12, 31)) |> 
+  select(state, mmwr_year, mmwr_week, total_deaths, covid_deaths, excess_deaths) |>
+  pivot_longer(
+    cols = c(covid_deaths, excess_deaths),
+    names_to = "type",
+    values_to = "deaths"
+  )
+
+ggplot(w3_worst, aes(x = mmwr_week, y = deaths, color = type, group = type)) +
+  geom_line() +
+  facet_wrap(~mmwr_year, scales = "free_y") +
+  labs(
+    title = "COVID Deaths vs Excess Deaths for SD in Wave 2",
+    x = "MMWR Week",
+    y = "Number of Deaths",
+    color = "Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+
+w4_worst <- dat2 |> 
+  filter(state %in% c("OK")) |> 
+  #Wave 4: December 2021 - March 2022
+  filter(date >= make_date(2021, 12, 1) & date <= make_date(2022, 3, 31)) |> 
+  select(state, mmwr_year, mmwr_week, total_deaths, covid_deaths, excess_deaths) |>
+  pivot_longer(
+    cols = c(covid_deaths, excess_deaths),
+    names_to = "type",
+    values_to = "deaths"
+  )
+
+ggplot(w4_worst, aes(x = mmwr_week, y = deaths, color = type, group = type)) +
+  geom_line() +
+  facet_wrap(~mmwr_year, scales = "free_y") +
+  labs(
+    title = "COVID Deaths vs Excess Deaths for SD in Wave 2",
+    x = "MMWR Week",
+    y = "Number of Deaths",
+    color = "Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
