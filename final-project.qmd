@@ -7,8 +7,6 @@ author: 'Jennifer Lin, Joey Lin, & Tavleen Bhatia'
 
 # Abstract
 
-The emergence of the COVID-19 pandemic resulted in a catastrophic increase in global mortality, and the rate of mortality can be influenced by factors, such as region, health policies and economic and medical resources. In this study, we aim to fully capture the profound impact that the pandemic had on mortality rates between 2020-2024 in the United States, including Puerto Rico and the District of Columbia. We seek to answer the following questions: 1) How did COVID-19 cases, deaths, and excess mortality vary across states and regions during the pandemic? Were there consistent patterns in state performance across different COVID "waves?" and 2) How closely did excess mortality align with COVID-19 deaths, and what does this alignment tell us about the broader impact of the pandemic? Data on state population and COVID-19 weekly cases, deaths, hospitalizations, vaccinations, and total deaths were obtained from the United States Census Bureau and the Centers for Disease Control and Prevention (CDC). We analyzed the periods between 2020-2024 to identify waves of COVID-19 cases and deaths, as well as excess mortality. Ultimately, the following four waves were identified as most prominent for COVID-19 cases and deaths: April to June 2020, October 2020 to March 2021, August to November 2021, and January to March 2022. After analyzing the trends of COVID-19 cases, deaths, and excess mortality during aforementioned periods, we found that COVID-19 contributed to excess mortality across the country.
-
 # Introduction
 
 The COVID-19 pandemic has been one of the most profound global crises of the 21st century, reshaping societies, economies, and public health systems worldwide. Originating in late 2019, the virus quickly spread across international borders, resulting in millions of infections and deaths. The United States, with its diverse population and varying state-level health policies, became a focal point for understanding the dynamics of the pandemic. This analysis seeks to uncover patterns and insights into COVID-19’s impact, focusing on key metrics such as case rates, death rates, and excess mortality across different states and regions.
@@ -250,6 +248,115 @@ dat |>
   theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
 ```
 
+The analysis of COVID-19 death rates across states during the four pandemic waves revealed notable trends and regional variations. **Wave 1 (April to June 2020)** showed the 'NY NJ PR VI' region, particularly New Jersey, with the highest COVID-19 death rates, exceeding 20 per 100,000. This state also reported total death rates surpassing 50 per 100,000, making it the worst performer in this period. Conversely, Alaska exhibited the lowest COVID-19 death rates (0 per 100000) and total death rates (\<14 per 100,000), emerging as the best-performing state during the first wave.
+
+```{r echo=FALSE, warning=FALSE}
+dat |>
+  select(date, population, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+   filter(state %in% c("NJ", "AK")) |>
+   #Wave 1: April-June 2020 
+  filter(date >= make_date(2020, 3, 15) & date <= make_date(2020, 6, 1)) |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region_name, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = paste('Wave 1: Rates of COVID deaths, & total deaths for NJ and AK'),
+       color = 'State') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+  
+```
+
+During **Wave 2 (October 2020 to March 2021)**, South Dakota recorded the highest COVID-19 death rates and total death rates, reflecting its struggles during this period. New York, in contrast, managed to maintain the lowest death rates across the 'NY NJ PR VI' region, reflecting improvements in public health measures following its challenges in Wave 1.
+
+```{r echo=FASLE, warning=FALSE}
+
+dat |>
+  select(date, population, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+   filter(state %in% c("SD", "NY")) |>
+   #Wave 2: October 2020 - March 2021 
+  filter(date >= make_date(2020, 9, 1) & date <= make_date(2021, 4, 1)) |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region_name, scales = 'free_y') + # stack/scale axis
+   labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = paste('Wave 2: Rates of COVID deaths, & total deaths for SD and NY'),
+       color = 'State') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+```
+
+**Wave 3 (August to November 2021)**, which coincided with the Delta variant's spread, saw Florida experiencing the highest death rates, while New York continued to demonstrate effective management, maintaining low rates.
+
+```{r echo=FALSE, warning=FALSE}
+
+dat |>
+  select(date, population, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+   filter(state %in% c("NY", "FL")) |>
+   #Wave 3: August 2021 - November 2021 
+  filter(date >= make_date(2021, 7, 1) & date <= make_date(2021, 12, 31))  |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region_name, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = paste('Wave 3: Rates of COVID deaths, & total deaths for NY and FL'),
+       color = 'State') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+```
+
+Similarly, **Wave 4 (January to March 2022)** showed Oklahoma as the worst-performing state, with significantly higher death rates. Meanwhile, New York again had the lowest rates, showcasing its sustained performance throughout the later waves.
+
+```{r echo=FALSE, warning = FALSE}
+dat |>
+  select(date, population, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000,
+         region = as.factor(region)) |>
+   filter(state %in% c("OK", "NY")) |>
+   #Wave 4: December 2021 - March 2022
+  filter(date >= make_date(2021, 12, 1) & date <= make_date(2022, 3, 31))  |>
+  ggplot(aes(x = date, y = rate, color = state)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_grid(type ~ region_name, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = paste('Wave 4: Rates of COVID deaths, & total deaths for OK and NY'),
+       color = 'State') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
+        legend.key.size = unit(0.25, 'cm'))
+```
+
+The selection of "good" and "bad" states was based on the COVID and total death rates, calculated as deaths per 100,000 people, using population-adjusted metrics to ensure comparability. This method allowed us to objectively identify the states that consistently performed well or poorly in managing COVID-19 deaths across the waves.
+
 # Discussion
 
 The COVID-19 pandemic has been marked by distinct waves of transmission and severity, each influenced by a combination of viral variants, public health responses, and sociopolitical factors. Our analysis sought to identify and justify these waves, guided by the question: how can the pandemic’s timeline be systematically divided into meaningful phases for better understanding its impact on public health? By using data on cases, hospitalizations, COVID-19 deaths, and total deaths, we aimed to uncover patterns that would allow us to demarcate the pandemic into periods of significant activity. This process is vital for contextualizing the varying impacts across regions and states and provides a foundation for evaluating the effectiveness of interventions, resource allocation, and preparedness for future pandemics.
@@ -261,6 +368,18 @@ Wave 3 in late summer and early fall of 2021 corresponds to the widespread circu
 These findings underscore the importance of systematically delineating pandemic waves to provide a clear framework for understanding the pandemic’s trajectory and regional disparities. The identification of these waves aligns with our broader objective of assessing variability in pandemic impact across states. While this method provides a structured timeline, it is important to acknowledge limitations, including potential underreporting or inconsistencies in data collection across states.
 
 In addressing the question of how to divide the pandemic into meaningful periods, this analysis has demonstrated the utility of integrating epidemiological metrics over time. Future research could build on this framework by incorporating additional factors, such as vaccine uptake rates, public health policies, and socioeconomic disparities, to further elucidate the drivers of these waves and improve preparedness for similar crises.
+
+Our analysis highlights the stark disparities in COVID-19 death rates across U.S. states during the pandemic. By focusing on death rates as a key metric, we were able to evaluate state-level performance in terms of public health responses, healthcare capacity, and population vulnerability. The findings align with our initial research question about understanding variability in pandemic impact and identifying states that performed better or worse.
+
+States like Alaska and New York consistently demonstrated resilience during different waves. Alaska’s performance in Wave 1 could be attributed to its relatively isolated geography and lower population density, which likely reduced transmission rates. New York, while severely impacted in Wave 1, implemented stronger public health interventions in subsequent waves, showcasing its ability to adapt and learn from earlier challenges.
+
+Conversely, states such as South Dakota, Florida, and Oklahoma struggled during key waves, with significantly higher death rates. These outcomes may reflect differences in public health strategies, vaccination uptake, healthcare infrastructure, or sociopolitical factors that shaped the pandemic response. For instance, South Dakota’s high rates in Wave 2 may be linked to less stringent mitigation measures, while Florida’s challenges in Wave 3 could reflect the heightened transmissibility of the Delta variant.
+
+The selection of "good" and "bad" states based on death rates provides a robust framework for evaluating pandemic management. By normalizing death rates per 100,000 population, we accounted for demographic differences, enabling fair comparisons across states. This approach emphasizes the importance of data-driven evaluations in assessing public health responses.
+
+However, the analysis has limitations. Data quality and consistency across states may have varied, potentially impacting the reported rates. Additionally, death rates alone do not capture the full spectrum of pandemic effects, such as long-term health outcomes or economic impacts. Future research should integrate these factors to provide a more comprehensive understanding.
+
+These findings have significant implications for public health policy. States with better performance can serve as models for effective pandemic management, while those that struggled highlight areas for improvement. The variability underscores the need for tailored approaches that consider regional and state-specific contexts, such as population density, healthcare access, and sociocultural dynamics. Ultimately, understanding these patterns is critical for improving preparedness and response strategies for future public health crises.
 
 # References
 
