@@ -113,12 +113,18 @@ To examine temporal and spatial trends, excess mortality rates were visualized u
 
 # Results
 
+The results section presents a comprehensive overview of the key findings from the analysis of COVID-19 trends in the United States from 2020 to 2024. This includes the identification of four distinct pandemic waves, each characterized by varying levels of cases, hospitalizations, COVID-related deaths, and total deaths across regions and states. The analysis employs normalized rates per 100,000 population to enable meaningful comparisons across states with differing population sizes. Visualizations highlight temporal and spatial trends, illustrating the evolution of the pandemic and regional disparities in its impact. Each subsection below focuses on specific findings for the overall trends and the defined waves, offering a clear depiction of the progression and intensity of the pandemic across time and geography.
+
+These figures collectively provide a detailed temporal overview of the pandemic across four distinct waves. By visualizing the trends for cases, hospitalizations, COVID deaths, and total deaths, the results highlight both the evolution of the pandemic over time and the substantial variation in its effects across regions. These visualizations serve as a foundation for further exploration of state-specific impacts and the identification of states that managed the pandemic effectively versus those that faced greater challenges.
+
 ```{r echo=FALSE, include=FALSE}
 # loading in data
 dat <- readRDS('data/dat.rds')
 ```
 
 **Overall trends of COVID-19 from 2020 to 2024**
+
+Figure 1 illustrates the overall trends of COVID-19 cases, hospitalizations, COVID-related deaths, and total deaths across the United States from January 2020 to December 2024. Each metric is normalized to a rate per 100,000 population to account for differences in state and regional populations. The figure provides a comprehensive view of the pandemic's progression, with notable peaks visible at various time points, reflecting significant waves of infections and mortality. The four distinct panels for cases, hospitalizations, COVID deaths, and total deaths enable a detailed examination of the relative timing and magnitude of these metrics across regions. The use of facet plots ensures clear visualization of the data trends over time.
 
 ```{r echo=FALSE, warning=FALSE}
 dat |>
@@ -143,6 +149,8 @@ dat |>
 
 **Wave 1: April 2020 - June 2020**
 
+Figure 2 highlights the trends for COVID-19 cases, hospitalizations, COVID-related deaths, and total deaths during the first wave, spanning April to June 2020. This wave marks the initial surge of the pandemic in the United States, with sharp increases in all four metrics across most regions. Regional disparities are apparent, with some regions experiencing higher rates of cases and deaths compared to others. The normalization of data allows for direct comparisons across states, providing insights into the heterogeneous impact of the pandemic during this period.
+
 ```{r echo=FASLE, warning = FALSE}
 dat |>
   select(date, population, cases, hosp, 
@@ -165,6 +173,8 @@ dat |>
 ```
 
 **Wave 2: October 2020 - March 2021**
+
+Figure 3 displays the trends during the second wave, which occurred from October 2020 to March 2021. This wave represents a prolonged period of high COVID-19 activity, as evidenced by elevated rates of cases, hospitalizations, and deaths. Notably, the duration of this wave exceeds the first wave, highlighting the pandemic's sustained impact during the winter months. Regional differences remain pronounced, with some areas exhibiting particularly high rates of hospitalizations and mortality.
 
 ```{r echo=FALSE, warning=FALSE}
 
@@ -190,6 +200,8 @@ dat |>
 
 **Wave 3: August 2021 - November 2021**
 
+Figure 4 presents the trends for the third wave, occurring between August and November 2021. This wave corresponds to the emergence of the Delta variant, characterized by a sharp rise in cases and hospitalizations. The shorter duration of this wave compared to the second is notable, as is the increased rate of hospitalizations relative to the earlier waves. Regional variability persists, with some states showing disproportionately high case rates and others maintaining comparatively low levels.
+
 ```{r echo=FALSE, warning=FALSE}
 dat |>
   select(date, population, cases, hosp, 
@@ -212,6 +224,8 @@ dat |>
 ```
 
 **Wave 4: January 2022 - March 2022**
+
+Figure 5 illustrates the fourth wave, which occurred from January to March 2022. This wave corresponds to the spread of the Omicron variant, which is associated with a significant increase in cases but relatively lower mortality compared to earlier waves. The high case rates observed during this period reflect the heightened transmissibility of the variant. The normalization of the data again facilitates comparisons across regions, revealing considerable heterogeneity in the pandemic's impact during this wave.
 
 ```{r echo=FALSE, warning = FALSE}
 dat |>
