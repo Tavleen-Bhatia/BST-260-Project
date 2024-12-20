@@ -40,7 +40,7 @@ unique(dat |>
   select(state))
 ```
 
-## Wave 1: April - June 2020 
+## Wave 1: April - June 2020
 
 ```{r}
 dat |>
@@ -59,14 +59,10 @@ dat |>
   labs(x = 'Time (Calendar Time)', 
        y = 'Rates (per 100000)',
        title = 'Wave 1: Rates of COVID deaths, & total deaths in U.S.',
-       color = 'State') + 
+
+       color = 'Region') + 
   theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
         legend.key.size = unit(0.25, 'cm'))
-
-
-unique(dat |> 
-  filter(region %in% 8) |> 
-  select(state))
 ```
 
 ```{r}
@@ -100,13 +96,14 @@ for (i in sort(unique(dat$region_name))) {
 
 Based on Wave 1:
 
-Best State:
+Best State: AK (Alaska) - has the lowest covid_death rate (0) and total_deaths rate (\< 14 per 100000)
 
-Worst State: New Jersey
+Worst State: New Jersey - has the highest covid_deaths rates (\> 20 per 10\^5) and total_deaths rates (\> 50 per 100000)
 
-## Wave 2: October 2020 - March 2021 
+## Wave 2: October 2020 - March 2021
 
 ```{r}
+
 dat |>
   select(date, population, 
          covid_deaths, total_deaths, region,
@@ -123,12 +120,17 @@ dat |>
   labs(x = 'Time (Calendar Time)', 
        y = 'Rates (per 100000)',
        title = 'Wave 2: Rates of COVID deaths, & total deaths in U.S.',
+
+       color = 'Region') + 
+
        color = 'State') + 
+
   theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
         legend.key.size = unit(0.25, 'cm'))
 ```
 
 ```{r}
+
 for (i in sort(unique(dat$region_name))) {
  plot2 <- dat |>
   select(date, population, 
@@ -158,13 +160,14 @@ for (i in sort(unique(dat$region_name))) {
 
 Based on Wave 2:
 
-Best State:
+Best State: NY (New York)
 
 Worst State: SD (South Dakota)
 
-## Wave 3: August-November 2021 
+## Wave 3: August-November 2021
 
 ```{r}
+
 dat |>
   select(date, population, 
          covid_deaths, total_deaths, region,
@@ -174,20 +177,16 @@ dat |>
                values_to = 'values') |> 
   mutate(rate = (values / population) * 100000,
          region = as.factor(region)) |>
-  filter(date >= make_date(2021, 7, 1) & date <= make_date(2021, 12, 31)) |>
+  filter(date >= make_date(2021, 8, 1) & date <= make_date(2021, 12, 31)) |>
   ggplot(aes(x = date, y = rate, color = state)) + 
   geom_line(aes(group = state)) + # creates smooth lines
   facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
   labs(x = 'Time (Calendar Time)', 
        y = 'Rates (per 100000)',
        title = 'Wave 3: Rates of COVID deaths, & total deaths in U.S.',
-       color = 'State') + 
+       color = 'Region') + 
   theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
         legend.key.size = unit(0.25, 'cm'))
-
-unique(dat |> 
-  filter(region %in% 4) |> 
-  select(state))
 ```
 
 ```{r}
@@ -202,11 +201,11 @@ for (i in sort(unique(dat$region_name))) {
   mutate(rate = (values / population) * 100000,
          region = as.factor(region)) |>
    filter(region_name %in% i) |>
-   #Wave 2: October 2020 - March 2021 
+   #Wave 2: August 2021 - November 2021 
   filter(date >= make_date(2021, 7, 1) & date <= make_date(2021, 12, 31))  |>
   ggplot(aes(x = date, y = rate, color = state)) + 
   geom_line(aes(group = state)) + # creates smooth lines
-  facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
+  facet_grid(type ~ region_name, scales = 'free_y') + # stack/scale axis
   labs(x = 'Time (Calendar Time)', 
        y = 'Rates (per 100000)',
        title = paste('Wave 3: Rates of COVID deaths, & total deaths in U.S.', i),
@@ -222,13 +221,14 @@ for (i in sort(unique(dat$region_name))) {
 
 Based on Wave 3:
 
-Best State:
+Best State: New York
 
 Worst State: Florida
 
 ## Wave 4: January 2022 - March 2022
 
 ```{r}
+
 dat |>
   select(date, population, 
          covid_deaths, total_deaths, region,
@@ -249,9 +249,6 @@ dat |>
   theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
         legend.key.size = unit(0.25, 'cm'))
 
-unique(dat |> 
-  filter(region %in% 6) |> 
-  select(state))
 ```
 
 ```{r}
@@ -266,14 +263,14 @@ for (i in sort(unique(dat$region_name))) {
   mutate(rate = (values / population) * 100000,
          region = as.factor(region)) |>
    filter(region_name %in% i) |>
-   #Wave 2: October 2020 - March 2021 
-  filter(date >= make_date(2021, 12, 1) & date <= make_date(2022, 3, 31)) |>
+   #Wave 4: December 2021 - March 2022
+  filter(date >= make_date(2021, 12, 1) & date <= make_date(2022, 3, 31))  |>
   ggplot(aes(x = date, y = rate, color = state)) + 
   geom_line(aes(group = state)) + # creates smooth lines
   facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
   labs(x = 'Time (Calendar Time)', 
        y = 'Rates (per 100000)',
-       title = paste('Wave 4: Rates of COVID deaths, & total deaths in U.S.', i),
+       title = paste('Wave 3: Rates of COVID deaths, & total deaths in U.S.', i),
        color = 'State') + 
   theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
         legend.key.size = unit(0.25, 'cm'))
@@ -284,6 +281,6 @@ for (i in sort(unique(dat$region_name))) {
 
 Based on Wave 4:
 
-Best State:
+Best State: New York
 
-Worst State: OK
+Worst State: OK (oklahoma)
