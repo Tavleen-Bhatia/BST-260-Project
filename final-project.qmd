@@ -9,7 +9,26 @@ author: 'Jennifer Lin, Joey Lin, & Tavleen Bhatia'
 
 # Introduction
 
+The COVID-19 pandemic has been one of the most profound global crises of the 21st century, reshaping societies, economies, and public health systems worldwide. Originating in late 2019, the virus quickly spread across international borders, resulting in millions of infections and deaths. The United States, with its diverse population and varying state-level health policies, became a focal point for understanding the dynamics of the pandemic. This analysis seeks to uncover patterns and insights into COVID-19’s impact, focusing on key metrics such as case rates, death rates, and excess mortality across different states and regions.
+
+Understanding the temporal evolution of the pandemic is crucial. The pandemic's waves, defined as periods of surging COVID-19 cases and corresponding deaths, provide a structured way to analyze its progression. Identifying these waves helps in assessing how different regions were affected and how public health responses evolved over time. By examining these waves, we aim to understand the correlation between rising cases and associated mortalities, revealing the interplay between infection rates, healthcare capacity, and policy interventions.
+
+A significant focus of this analysis is excess mortality—deaths that occurred above the expected baseline during the pandemic. While COVID-19 deaths are directly attributable to the virus, excess mortality captures the broader impact, including deaths from overwhelmed healthcare systems, delayed medical treatments, or indirect consequences of societal disruptions. This measure allows us to gauge the true toll of the pandemic, offering a more comprehensive view than official COVID-19 death counts alone.
+
+This study also delves into regional and state-level variations. States in the U.S. experienced the pandemic differently due to factors such as population density, socioeconomic conditions, healthcare infrastructure, and policy measures. By comparing states like Alaska, New Jersey, South Dakota, and Florida, we highlight the stark contrasts in outcomes. For instance, some states managed to maintain lower death rates through stringent measures, while others faced severe challenges during certain waves.
+
+Our analysis is guided by the following research questions:
+
+1.  How did COVID-19 cases, deaths, and excess mortality vary across states and regions during the pandemic? Were there consistent patterns in state performance across different COVID "waves"?
+2.  How closely did excess mortality align with COVID-19 deaths, and what does this alignment tell us about the broader impact of the pandemic?
+
+To address these questions, we adopted a data-driven approach, leveraging statistical models, data visualizations, and regional comparisons. The methodology involves breaking down the pandemic into four distinct waves based on peaks in cases and deaths: April to June 2020 (Wave 1), October 2020 to March 2021 (Wave 2), August to November 2021 (Wave 3), and January to March 2022 (Wave 4). For each wave, we analyzed state-level data to identify trends and outliers, comparing metrics such as case rates, death rates, and excess mortality. Statistical models were employed to estimate expected mortality based on pre-pandemic trends, enabling a comparison of observed and expected deaths during the pandemic.
+
+By structuring the analysis around these waves and focusing on both direct and indirect mortality, this study provides a nuanced understanding of the pandemic's impact across the U.S. Our findings aim to inform future public health strategies, highlight areas of success and failure, and contribute to the growing body of knowledge on pandemic response and resilience.
+
 # Methods
+
+**Data Collection and Wrangling**
 
 The dataset used to collect population data during the COVID-19 era came from the United States Census Bureau, which contained information about the average yearly population from 2020-2023 in all fifty states plus Puerto Rico and the District of Columbia (Bureau, n.d.b.). Data was wrangled to only include information about the yearly population for each state. Based on graph 1, since the population barely changes from 2020 to 2023, it is assumed that the population in 2024 will be similar. To get population data for 2024, the average population from 2020 to 2023 was calculated.
 
@@ -56,29 +75,180 @@ population |>
 
 To collect information about the effect of COVID-19, data about weekly COVID cases, weekly COVID deaths, weekly hospitalizations, weekly COVID-19 vaccinations, and weekly total deaths for all fifty states, Puerto Rico, and the District of Columbia from 2020-2023 came from 4 separate json datasets from the CDC (*COVID-19 Vaccination Trends*, n.d.; *Provisional COVID-19 Death Counts*, n.d.; *United States COVID-19 Hospitalization*, n.d.; *Weekly United States COVID-19*, n.d.). For weekly COVID cases, data was wrangled to identify the date, state (i.e., all 50 states, Puerto Rico and District of Columbia), year, and epi-week of only a COVID-19 case occurrence (*Weekly United States COVID-19*, n.d.). For weekly COVID deaths and weekly total deaths, data was wrangled to identify the date, state (i.e., all 50 states, Puerto Rico and District of Columbia), year, and epi-week of only a COVID-19 death or a total death occurrence (*Provisional COVID-19 Death Counts*, n.d.). For weekly COVID-19 hospitalizations, data was wrangled to identify the date, state (i.e., all 50 states, Puerto Rico and District of Columbia), year, epi-week, and converted from daily to weekly hospitalizations after collapsing by week and only keeping data with observations for the whole week (*United States COVID-19 Hospitalization*, n.d.). For weekly COVID-19 vaccinations, after filtering for \`Admin\` information, data was wrangled to identify the date, state (i.e., all 50 states, Puerto Rico and District of Columbia), year, and epi-week for the total weekly series cumulative and booster shot given (*COVID-19 Vaccination Trends*, n.d.). If needed, state abbreviations were added to each dataframe using state information provided from class (Irizarry, 2024). 
 
-A dataset was created to combine population and COVID-19 data together from 2020 to 2024 by matching based on the date, state, year, and epi-week of occurrence. This created a dataframe where the population, COVID cases, COVID deaths, hospitalizations, vaccinations, and total deaths were all merged together. 
+A dataset was created to combine population and COVID-19 data together from 2020 to 2024 by matching based on the date, state, year, and epi-week of occurrence. This created a master dataframe called `dat` where the population, COVID cases, COVID deaths, hospitalizations, vaccinations, and total deaths were all merged together. 
 
 To find excess deaths, information about population data for all fifty states, Puerto Rico, and the District of Columbia from 2010-2020 was also collected from the United States Census Bureau (Bureau, n.d.a.) while the information about total deaths per week from 2014-2019 in all fifty states, Puerto Rico, and the District of Columbia were gathered from the CDC (*Weekly Counts of Deaths*, n.d.). The census data from 2010 to 2020 was subsetted to 2014 to 2019 as the total deaths before the pandemic were only from 2014 to 2019. The data on total deaths before the pandemic would ideally be from a larger time frame (i.e., 2000 to 2019). However, the largest dataset found from the CDC was from 2014 to 2019. Therefore, the analysis sacrificed more data for more consistency as all information about total deaths came from the CDC. For census information, data was wrangled to only keep the population for each year for all 50 states, Puerto Rico, and the District of Columbia. For weekly total deaths information, data was wrangled to only keep the total deaths information for each state, date, epi-year, and epi-week. Afterwards, state abbreviations were added to each dataframe using state information provided from class (Irizarry, 2024). 
 
-Another dataset was created to combine population and total deaths together from 2014 to 2019 by matching based on the date, state, year, and epi-week of occurrence. This created a dataframe where the population and total deaths were all merged together. 
+Another dataset was created to combine population and total deaths together from 2014 to 2019 by matching based on the date, state, year, and epi-week of occurrence. This created a dataframe where the population and total deaths were all merged together.
 
-After the data has been collected, the COVID-19 waves were identified by COVID-19 cases and COVID-19 deaths making a ‘hump’ shape together. After identifying the COVID-19 waves, the death rate of COVID-19 per 100,000 people for each state was calculated by taking the number of covid deaths divided by the population of each state and multiplying it by 100,000 for each week from 2020 to 2023 and the virulence of COVID-19 was calculated by finding the case rate of COVID-19 per 100,000 for each state. The COVID-19 case rate (per 100,000 people) was calculated by dividing the number of COVID-19 cases for each state by the population and multiplying it by 100,000.
+#### Identifying COVID-19 Waves
+
+The first step in the analysis was to identify distinct COVID-19 waves, defined as periods when COVID-19 cases and COVID-19 deaths displayed synchronized peaks, forming characteristic "hump" shapes in the data. This involved visualizing weekly trends of COVID-19 cases, hospitalizations, and deaths using time-series plots. These plots were generated using the `ggplot2` library in R, which allowed for effective graphical representation. Specifically, facet plots were employed to facilitate side-by-side comparisons of cases, hospitalizations, and deaths across different states and regions, ensuring a clear visualization of the pandemic's progression.
+
+To normalize for population differences, the COVID-19 death rate (per 100,000 people) was calculated by dividing the number of COVID-19 deaths by the state population and multiplying by 100,000. Similarly, the virulence of COVID-19 was assessed by calculating the COVID-19 case rate (per 100,000 people) using the same normalization formula. This normalization ensured comparability across states with varying population sizes. The resulting visualizations provided a foundation for identifying four major COVID-19 waves during the study period, which subsequently informed the analysis of death rates, virulence, and excess mortality.
+
+#### Evaluating Death Rates Across States and Waves
+
+The second stage of the analysis focused on evaluating COVID-19 death rates for each state during the identified waves. The death rate, expressed as deaths per 100,000 people, served as a standardized metric for comparing state-level performance over time. This analysis aimed to categorize states as "good" or "poor" based on their performance. States with consistently low death rates were labeled as "good," while those with high death rates during specific waves were deemed "poor."
+
+Statistical and graphical methods were applied to identify and analyze trends. Death rate trends were visualized using line plots with facet grids, enabling a detailed examination of individual states within each region. The `lubridate` library was used for date manipulation, ensuring accurate filtering of time periods corresponding to each wave. These visualizations highlighted state-level disparities in COVID-19 death rates, which were further examined to understand the variability in pandemic impact and response strategies.
+
+#### Virulence of COVID-19
+
+To assess the virulence of COVID-19, the case rate (cases per 100,000 people) was calculated for each state and wave. This metric captured the relative intensity of viral spread across different regions. Similar to the death rate analysis, states were categorized based on their case rate trends, with good states having consistently low case rates and poor states exhibiting higher rates.
+
+The analysis utilized facet plots to compare case rates across states and regions, allowing for both individual and aggregate trends to be examined. This dual approach of analyzing case and death rates offered a comprehensive perspective on the pandemic's impact, highlighting not only the severity of outcomes but also the intensity of viral spread.
+
+#### Excess Mortality Analysis
+
+The fourth stage of the analysis explored excess mortality, a critical measure of the pandemic's broader impact on public health. Excess mortality was calculated as the difference between observed deaths and expected deaths during the pandemic (2020–2024). Expected deaths were estimated using pre-pandemic data on total deaths (2014–2019) and a linear regression model. The predictors included state, epidemiological week, and region, and the model was implemented using R's base `lm()` function. This approach allowed for robust predictions of baseline mortality in the absence of the pandemic.
+
+After calculating excess deaths, the data were visualized to assess alignment between excess deaths and COVID-19 deaths. Line plots were used to compare trends over time, enabling the identification of patterns and discrepancies between states. This analysis was instrumental in distinguishing the direct effects of COVID-19 from other factors contributing to increased mortality during the pandemic.
+
+#### Excess Mortality Rates
+
+The final component of the analysis focused on excess mortality rates, calculated as excess deaths per 100,000 people. This metric provided a standardized measure of the relative burden of excess mortality across states, allowing for direct comparisons independent of population size.
+
+To examine temporal and spatial trends, excess mortality rates were visualized using time-series plots with facets by state and region. The combination of excess mortality and total mortality analysis offered a nuanced understanding of the pandemic's impact, highlighting how effectively states managed the crisis. This analysis was facilitated by the `tidyverse` suite of libraries, which streamlined data wrangling and visualization.
 
 # Results
+
+```{r echo=FALSE, include=FALSE}
+# loading in data
+dat <- readRDS('data/dat.rds')
+```
+
+**Overall trends of COVID-19 from 2020 to 2024**
+
+```{r echo=FALSE, warning=FALSE}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Rates of COVID cases, Hospitalizations, COVID deaths, & Total Deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+
+```
+
+**Wave 1: April 2020 - June 2020**
+
+```{r echo=FASLE, warning = FALSE}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2020, 3, 15) & date <= make_date(2020, 6, 1)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 1 (April - June 2020) Rates of COVID cases/deaths, Hospitalizations, & Total Deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+**Wave 2: October 2020 - March 2021**
+
+```{r echo=FALSE, warning=FALSE}
+
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2020, 9, 1) & date <= make_date(2021, 4, 1)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 2 (October 2020 - March 2021) Rates of COVID cases/deaths, Hospitalizations, & Total Deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+**Wave 3: August 2021 - November 2021**
+
+```{r echo=FALSE, warning=FALSE}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2021, 7, 1) & date <= make_date(2021, 12, 31)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 3 (August - November 2021) Rates of COVID cases/deaths, Hospitalizations, & Total Deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+**Wave 4: January 2022 - March 2022**
+
+```{r echo=FALSE, warning = FALSE}
+dat |>
+  select(date, population, cases, hosp, 
+         covid_deaths, total_deaths, region,
+         region_name, state) |>
+  pivot_longer(c(cases, hosp, 
+                 covid_deaths, total_deaths), # create col of type of rate, for facet wrapping
+               names_to = 'type', 
+               values_to = 'values') |> 
+  filter(date >= make_date(2021, 12, 1) & date <= make_date(2022, 3, 31)) |> # filters for specific wave
+  mutate(rate = (values / population) * 100000) |> # calcs rate
+  ggplot(aes(x = date, y = rate, color = region_name)) + 
+  geom_line(aes(group = state)) + # creates smooth lines
+  facet_wrap(~ type, nrow = 4, scales = 'free_y') + # stack/scale axis
+  labs(x = 'Time (Calendar Time)', 
+       y = 'Rates (per 100000)',
+       title = 'Wave 4 (January - March 2022) Rates of COVID cases/deaths, hospitalizations, & total deaths in U.S.',
+       color = 'Region') + 
+  theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
+```
+
+# 
 
 # Discussion
 
 # References
 
-Bureau, U. C. (n.d.a). *National Population Totals: 2010-2020*. Census.Gov. Retrieved December 17, 2024, from <https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-totals-national.html>\
+Bureau, U. C. (n.d.a). *National Population Totals: 2010-2020*. Census.Gov. Retrieved December 17, 2024, from <https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-totals-national.html>
 
 Bureau, U. C. (n.d.b). *State Population Totals and Components of Change: 2020-2023*. Census.Gov. Retrieved December 17, 2024, from <https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html>
 
-*COVID-19 Vaccination Trends in the United States,National and Jurisdictional \| Data \| Centers for Disease Control and Prevention*. (n.d.). Retrieved December 19, 2024, from <https://data.cdc.gov/Vaccinations/COVID-19-Vaccination-Trends-in-the-United-States-N/rh2h-3yt2/about_data>\
+*COVID-19 Vaccination Trends in the United States,National and Jurisdictional \| Data \| Centers for Disease Control and Prevention*. (n.d.). Retrieved December 19, 2024, from <https://data.cdc.gov/Vaccinations/COVID-19-Vaccination-Trends-in-the-United-States-N/rh2h-3yt2/about_data>
 
-Irizarry, R. (2024), Introduction to Data Science Repository. GitHub repository. <https://raw.githubusercontent.com/datasciencelabs/2024/refs/heads/main/data/regions.json> \
+Irizarry, R. (2024), Introduction to Data Science Repository. GitHub repository. <https://raw.githubusercontent.com/datasciencelabs/2024/refs/heads/main/data/regions.json> 
 
-*Provisional COVID-19 Death Counts by Week Ending Date and State \| Data \| Centers for Disease Control and Prevention*. (n.d.). Retrieved December 19, 2024, from <https://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab/about_data>\
+*Provisional COVID-19 Death Counts by Week Ending Date and State \| Data \| Centers for Disease Control and Prevention*. (n.d.). Retrieved December 19, 2024, from <https://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab/about_data>
 
 *United States COVID-19 Hospitalization Metrics by Jurisdiction, Timeseries – ARCHIVED \| Data \| Centers for Disease Control and Prevention*. (n.d.). Retrieved December 19, 2024, from <https://data.cdc.gov/Public-Health-Surveillance/United-States-COVID-19-Hospitalization-Metrics-by-/39z2-9zu6/about_data>
 
