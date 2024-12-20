@@ -1,5 +1,7 @@
 # BST-260-Project
 
+Supplementary material is located in `docs`
+
 Steps on reproducing results:
 
 1) Use `raw-data/NST-EST2023-ALLDATA.csv` file from https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html to get 2020-2023 population data
