@@ -248,9 +248,17 @@ dat |>
   theme(axis.text.x = element_text(vjust = 0.75, size = 6)) 
 ```
 
-# 
-
 # Discussion
+
+The COVID-19 pandemic has been marked by distinct waves of transmission and severity, each influenced by a combination of viral variants, public health responses, and sociopolitical factors. Our analysis sought to identify and justify these waves, guided by the question: how can the pandemic’s timeline be systematically divided into meaningful phases for better understanding its impact on public health? By using data on cases, hospitalizations, COVID-19 deaths, and total deaths, we aimed to uncover patterns that would allow us to demarcate the pandemic into periods of significant activity. This process is vital for contextualizing the varying impacts across regions and states and provides a foundation for evaluating the effectiveness of interventions, resource allocation, and preparedness for future pandemics.
+
+Through our analysis, we identified four distinct waves: Wave 1 (April to June 2020), Wave 2 (October 2020 to March 2021), Wave 3 (August to November 2021), and Wave 4 (January to March 2022). Each wave was characterized by a “hump” in the data, showing synchronous increases in cases, hospitalizations, and deaths. Wave 1 reflects the pandemic’s initial surge, with higher rates in regions such as New England and the Mid-Atlantic, which were early epicenters. Wave 2 occurred during the colder months of late 2020 and early 2021, coinciding with the winter holidays and a broader national spread. Notably, this wave displayed significant increases in cases and deaths across the Midwest and South Central regions.
+
+Wave 3 in late summer and early fall of 2021 corresponds to the widespread circulation of the Delta variant, leading to increased hospitalization and death rates in regions like the Southeast. Finally, Wave 4 in early 2022 aligns with the rapid transmission of the Omicron variant, which, while resulting in record-breaking case rates, showed comparatively lower death rates in highly vaccinated regions. The patterns observed in Wave 4 suggest a potential decoupling of case rates from mortality, highlighting the critical role of vaccinations and evolving treatments.
+
+These findings underscore the importance of systematically delineating pandemic waves to provide a clear framework for understanding the pandemic’s trajectory and regional disparities. The identification of these waves aligns with our broader objective of assessing variability in pandemic impact across states. While this method provides a structured timeline, it is important to acknowledge limitations, including potential underreporting or inconsistencies in data collection across states.
+
+In addressing the question of how to divide the pandemic into meaningful periods, this analysis has demonstrated the utility of integrating epidemiological metrics over time. Future research could build on this framework by incorporating additional factors, such as vaccine uptake rates, public health policies, and socioeconomic disparities, to further elucidate the drivers of these waves and improve preparedness for similar crises.
 
 # References
 
