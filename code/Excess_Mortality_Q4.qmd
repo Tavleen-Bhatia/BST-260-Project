@@ -15,7 +15,7 @@ library(ggrepel)
 
 ```{r}
 dat <- readRDS('../data/dat.rds')
-pre_covid <- readRDS('../data/pre-covid.rds')
+pre_covid <- readRDS('../data/dat_preCovid.rds')
 #write.csv(pre_covid, "pre_covid.csv", row.names = FALSE)
 ```
 

@@ -15,7 +15,7 @@ library(ggrepel)
 
 ```{r}
 dat <- readRDS('../data/dat.rds')
-pre_covid <- readRDS('../data/pre-covid.rds')
+pre_covid <- readRDS('../data/dat_preCovid.rds')
 ```
 
 ```{r}
@@ -171,7 +171,7 @@ dat2 |>
   mutate(rate = (values / population) * 100000,
          region = as.factor(region)) |>
   #Wave 3: August 2021 - November 2021
-  filter(date >= make_date(2021, 8, 1) & date <= make_date(2021, 11, 31)) |>
+  filter(date >= make_date(2021, 8, 1) & date <= make_date(2021, 12, 31)) |>
   ggplot(aes(x = date, y = rate, color = state)) + 
   geom_line(aes(group = state)) + # creates smooth lines
   facet_grid(type ~ region, scales = 'free_y') + # stack/scale axis
@@ -237,7 +237,6 @@ dat2 |>
   labs(x = 'Time (Calendar Time)', 
        y = 'Rates (per 100000)',
        title = 'Wave 4: Rates of Excess deaths, & total deaths in U.S.',
-       title = 'Wave 4: Rates of Excess Deaths, & Total Deaths in U.S. for Region',
        color = 'Region') + 
   theme(axis.text.x = element_text(vjust = 0.75, size = 6, angle = 45),
         legend.key.size = unit(0.25, 'cm'))
